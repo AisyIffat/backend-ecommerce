@@ -20,9 +20,9 @@ const {
 
 // GET /products - list all the products
 router.get("/", async (req, res) => {
-    const price = req.query.price;
     const category = req.query.category;
-    const products = await getProducts(price, category);    
+    const page = req.query.page;
+    const products = await getProducts(category, page);    
     res.status(200).send(products);
 });
 
@@ -60,6 +60,7 @@ router.post("/", async (req, res) => {
             // short hand
             .send(await addProduct(name, description, price, category));
     } catch (error) {
+        console.log(error);
         res.status(400).send({ message: "Unknown error" });
     }
 });
@@ -86,6 +87,7 @@ router.put("/:id", async (req, res) => {
                 await updateProduct(id, name, description, price, category)
             );
     } catch (error) {
+        console.log(error);
         res.status(400).send({ message: "Unknown error" });
     }
 });
@@ -101,6 +103,7 @@ router.delete("/:id", async (req, res) => {
             message: `Product with the ID of ${id} has been deleted`,
         });
     } catch (error) {
+        console.log(error);
         res.status(400).send({ message: "Unknown error" });
     }
 });
