@@ -10,10 +10,10 @@ async function getProducts(category, page = 1, itemsPerPage = 6) {
   }
 
   const products = await Product.find(filter)
+    .populate("category")
     .limit(itemsPerPage)
     .skip((page - 1) * itemsPerPage)
     .sort({ _id: -1 });
-  console.log(products);
   return products;
 }
 
@@ -23,20 +23,21 @@ async function getProduct(id) {
   return product;
 }
 
-async function addProduct(name, description, price, category) {
+async function addProduct(name, description, price, category, image) {
   // create new product
   const newProduct = new Product({
     name: name,
     description: description,
     price: price,
     category: category,
+    image,
   });
   // save the new product into mongodb
   await newProduct.save(); // clicking the "save" button
   return newProduct;
 }
 
-async function updateProduct(id, name, description, price, category) {
+async function updateProduct(id, name, description, price, category, image) {
   return await Product.findByIdAndUpdate(
     id,
     {
@@ -44,6 +45,7 @@ async function updateProduct(id, name, description, price, category) {
       description: description,
       price: price,
       category: category,
+      image,
     },
     {
       new: true, // return the updated data

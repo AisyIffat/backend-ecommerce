@@ -2,6 +2,8 @@ const express = require("express");
 // create a express router
 const router = express.Router();
 
+const { isAdmin } = require("../middleware/auth");
+
 /*
     Routes for products
     GET /products - list all the products
@@ -42,12 +44,13 @@ router.get("/:id", async (req, res) => {
     - price
     - category
 */
-router.post("/", async (req, res) => {
+router.post("/", isAdmin, async (req, res) => {
     try {
         const name = req.body.name;
         const description = req.body.description;
         const price = req.body.price;
         const category = req.body.category;
+        const image  = req.body.image;
 
         // check error - make sure all the fields are not empty
         if ( !name || !price || !category ) {
@@ -58,7 +61,7 @@ router.post("/", async (req, res) => {
         res
             .status(200)
             // short hand
-            .send(await addProduct(name, description, price, category));
+            .send(await addProduct(name, description, price, category, image));
     } catch (error) {
         console.log(error);
         res.status(400).send({ message: "Unknown error" });
@@ -66,13 +69,14 @@ router.post("/", async (req, res) => {
 });
 
 // PUT /products/68941f1bcef7f0dcfa6a9a4b - update product
-router.put("/:id", async (req, res) => {
+router.put("/:id", isAdmin, async (req, res) => {
     try {
         const id = req.params.id; // id of the product
         const name = req.body.name;
         const description = req.body.description;
         const price = req.body.price;
         const category = req.body.category;
+        const image  = req.body.image;
 
         // check error - make sure all the fields are not empty
         if ( !name || !price || !category ) {
@@ -84,7 +88,7 @@ router.put("/:id", async (req, res) => {
         res
             .status(200)
             .send(
-                await updateProduct(id, name, description, price, category)
+                await updateProduct(id, name, description, price, category, image)
             );
     } catch (error) {
         console.log(error);
@@ -93,7 +97,7 @@ router.put("/:id", async (req, res) => {
 });
 
 // DELETE /products/68941f1bcef7f0dcfa6a9a4b - delete product
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", isAdmin, async (req, res) => {
     try {
         const id = req.params.id;
 
