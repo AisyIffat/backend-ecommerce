@@ -47,6 +47,6 @@ app.use("/api/users", require("./routes/user"));
 app.use("/uploads", express.static("uploads"));
 
 // start the express server
-app.listen(2303,() => {
-    console.log("server is running at http://localhost:2303");
+app.listen(5303,() => {
+    console.log("server is running at http://localhost:5303");
 });
